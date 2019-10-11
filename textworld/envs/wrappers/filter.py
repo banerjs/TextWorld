@@ -24,6 +24,7 @@ class EnvInfos:
                  'entities', 'verbs', 'command_templates',
                  'admissible_commands', 'intermediate_reward',
                  'policy_commands',
+                 'game',
                  'extras']
 
     def __init__(self, **kwargs):
@@ -77,6 +78,8 @@ class EnvInfos:
         #: bool: Templates for commands understood by the the game.
         #:       This information *doesn't* change from one step to another.
         self.command_templates = kwargs.get("command_templates", False)
+        #: bool: Current game in its serialized form. Use with `textworld.Game.deserialize`.
+        self.game = kwargs.get("game", False)
         #: List[str]: Names of extra information which are game specific.
         self.extras = kwargs.get("extras", [])
 
