@@ -2,8 +2,10 @@
 # Licensed under the MIT license.
 
 
+import os
 import re
 from collections import OrderedDict
+from textworld.utils import str2bool
 
 from textworld.generator.data import KnowledgeBase
 from textworld.generator.game import Quest, Event, Game
@@ -11,6 +13,13 @@ from textworld.generator.game import Quest, Event, Game
 from textworld.generator.text_grammar import Grammar
 from textworld.generator.text_grammar import fix_determinant
 from textworld.logic import Placeholder
+
+
+def highlight(text, flag=False):
+    if flag:
+        return "[bold type][italic type]{}[roman type]".format(text)
+
+    return text
 
 
 class CountOrderedDict(OrderedDict):
@@ -155,6 +164,10 @@ def assign_description_to_room(room, game, grammar):
 
     # Convert the objects into groupings based on adj/noun/type
     objs = [o for o in room.content if KnowledgeBase.default().types.is_descendant_of(o.type, KnowledgeBase.default().types.CLASS_HOLDER)]
+
+    if len(objs) == 0:
+        room_desc = expand_clean_replace("#dec_empty#", grammar, room, game.infos)
+
     groups = OrderedDict()
     groups["adj"] = OrderedDict()
     groups["noun"] = OrderedDict()
@@ -217,7 +230,7 @@ def assign_description_to_room(room, game, grammar):
                     room_desc += expand_clean_replace(" " + tag, grammar, obj, game.infos)
                     break
 
-    room_desc += "\n\n"
+    room_desc = room_desc.rstrip() + "\n\n"
 
     # Look for potential exit directions.
     exits_with_open_door = []
@@ -277,6 +290,7 @@ def assign_description_to_room(room, game, grammar):
             exits_desc.append(e_desc)
 
     room_desc += " ".join(exits_desc)
+    room_desc = room_desc.rstrip()
 
     # Finally, set the description
     return fix_determinant(room_desc)
@@ -540,9 +554,9 @@ def expand_clean_replace(symbol, grammar, obj, game_infos):
     obj_infos = game_infos[obj.id]
     phrase = grammar.expand(symbol)
     phrase = phrase.replace("(obj)", obj_infos.id)
-    phrase = phrase.replace("(name)", obj_infos.name)
-    phrase = phrase.replace("(name-n)", obj_infos.noun if obj_infos.adj is not None else obj_infos.name)
-    phrase = phrase.replace("(name-adj)", obj_infos.adj if obj_infos.adj is not None else grammar.expand("#ordinary_adj#"))
+    phrase = phrase.replace("(name)", highlight(obj_infos.name, grammar.options.highlight))
+    phrase = phrase.replace("(name-n)", highlight(obj_infos.noun if obj_infos.adj else obj_infos.name, grammar.options.highlight))
+    phrase = phrase.replace("(name-adj)", obj_infos.adj if obj_infos.adj else grammar.expand("#ordinary_adj#"))
     if obj.type != "":
         phrase = phrase.replace("(name-t)", KnowledgeBase.default().types.get_description(obj.type))
     else:
@@ -554,13 +568,13 @@ def expand_clean_replace(symbol, grammar, obj, game_infos):
 def clean_replace_objs(grammar, desc, objs, game_infos):
     """ Return a cleaned/keyword replaced for a list of objects. """
     desc = desc.replace("(obj)", obj_list_to_prop_string(objs, "id", game_infos, det=False))
-    desc = desc.replace("(name)", obj_list_to_prop_string(objs, "name", game_infos, det=False))
-    desc = desc.replace("(name-n)", obj_list_to_prop_string(objs, "noun", game_infos, det=False))
+    desc = desc.replace("(name)", obj_list_to_prop_string(objs, "name", game_infos, det=False, emphasis=True))
+    desc = desc.replace("(name-n)", obj_list_to_prop_string(objs, "noun", game_infos, det=False, emphasis=True))
     desc = desc.replace("(name-adj)", obj_list_to_prop_string(objs, "adj", game_infos, det=False))
-    desc = desc.replace("(name-definite)", obj_list_to_prop_string(objs, "name", game_infos, det=True, det_type="the"))
-    desc = desc.replace("(name-indefinite)", obj_list_to_prop_string(objs, "name", game_infos, det=True, det_type="a"))
-    desc = desc.replace("(name-n-definite)", obj_list_to_prop_string(objs, "noun", game_infos, det=True, det_type="the"))
-    desc = desc.replace("(name-n-indefinite)", obj_list_to_prop_string(objs, "noun", game_infos, det=True, det_type="a"))
+    desc = desc.replace("(name-definite)", obj_list_to_prop_string(objs, "name", game_infos, det=True, det_type="the", emphasis=True))
+    desc = desc.replace("(name-indefinite)", obj_list_to_prop_string(objs, "name", game_infos, det=True, det_type="a", emphasis=True))
+    desc = desc.replace("(name-n-definite)", obj_list_to_prop_string(objs, "noun", game_infos, det=True, det_type="the", emphasis=True))
+    desc = desc.replace("(name-n-indefinite)", obj_list_to_prop_string(objs, "noun", game_infos, det=True, det_type="a", emphasis=True))
     return desc
 
 
@@ -576,9 +590,17 @@ def repl_sing_plur(phrase, length):
     return phrase
 
 
-def obj_list_to_prop_string(objs, property, game_infos, det=True, det_type="a"):
+def obj_list_to_prop_string(objs, property, game_infos, det=True, det_type="a", emphasis=False):
     """ Convert an object list to a nl string list of names. """
-    return list_to_string(list(map(lambda obj: getattr(game_infos[obj.id], property), objs)), det=det, det_type=det_type)
+    obj_names = []
+    for obj in objs:
+        obj_name = getattr(game_infos[obj.id], property)
+        if emphasis:
+            obj_name = highlight(obj_name)
+
+        obj_names.append(obj_name)
+
+    return list_to_string(obj_names, det=det, det_type=det_type)
 
 
 def list_to_string(lst, det, det_type="a"):

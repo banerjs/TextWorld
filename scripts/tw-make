@@ -48,6 +48,7 @@ def parse_args():
                                help="Path where to save the generated game. If it points to a folder,"
                                     " the game's UUID will be used as the filename.")
     general_group.add_argument('--seed', type=int)
+    general_group.add_argument('--seeds', type=int, nargs=4)
     general_group.add_argument('--format', choices=["ulx", "z8"], default="ulx",
                                help="Which format to use when compiling the game. Default: %(default)s")
     general_group.add_argument("--overview", action="store_true",
@@ -144,12 +145,19 @@ if __name__ == "__main__":
     if args.seed is None:
         args.seed = np.random.randint(65635)
 
+    if args.seeds is not None:
+        args.seed = {'map': args.seeds[0], 'objects': args.seeds[1], 'quest': args.seeds[2], 'grammar': args.seeds[3]}
+
     if not args.silent:
         print("Global seed: {}".format(args.seed))
 
     options = textworld.GameOptions()
     options.seeds = args.seed
     dirname, basename = os.path.split(args.output)
+    filename, ext = os.path.splitext(basename)
+    if ext:
+        args.format = ext.lstrip(".")
+
     options.path = pjoin(os.path.abspath(dirname), basename)
     options.file_ext = "." + args.format
     options.force_recompile = args.force
@@ -224,7 +232,7 @@ if __name__ == "__main__":
 
     if args.save_overview:
         image = textworld.render.visualize(game)
-        overview_file = game_file.replace(".ulx", ".png")
+        overview_file = game_file.replace(options.file_ext, ".png")
         image.save(overview_file)
 
         if not args.silent:

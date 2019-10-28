@@ -86,6 +86,21 @@ work_(c):#work_(c)_adj# | #work_(c)_noun#
 work_(c)_noun:cabinet;box;safe;locker;trunk;bureau;coffer;case;suitcase;toolbox;portmanteau;display
 work_(c)_adj:iron;rusty;ancient
 
+# Pot
+#-------------------
+(pot):#(pot)_adj_noun#
+(pot)_noun:cooking pot;cauldron;cookpot
+(pot)_adj:big;metal;old
+(pot)_adj_noun:#(pot)_adj# | #(pot)_noun#
+
+
+# Meal
+#-------------------
+(meal):#(meal)_adj_noun#
+(meal)_noun:meal;lunch;dinner
+(meal)_adj:delicious;tasty;suspicious
+(meal)_adj_noun:#(meal)_adj# | #(meal)_noun#
+
 
 
 fruit:watermelon;melon;honeydew;strawberry;apple;pear;grape;kiwi;cantaloupe
@@ -281,22 +296,17 @@ food_what:appetizing;delicious;tasty;appealing;delectable;heavenly;inviting;savo
 (k)_desc:The [noun] is cold to the touch;The [noun] is #key_weight#.;The metal of the [noun] is #key_metal#.;The [noun] looks useful.
 key_weight:heavy;light;weighty;surprisingly heavy;heavier than it looks
 key_metal:antiqued;brushed;hammered;polished;satin;rusty
-(d)_desc:The [noun] looks #door_what_is#.;It's a #door_what_is# [noun];It is what it is, a [noun].
+(d)_desc:The [noun] looks #door_what_is#.;It's a #door_what_is# [noun].;It is what it is, a [noun].
 door_what_is:imposing;sturdy;well-built;durable;robust;rugged;hefty;commanding;grand;noble;ominous;towering;manageable;solid;stuffy
 #State descriptors
 #-----------------
-force_open:force open;open;break open;bash open;crack open
-openable_desc:[if open]It is open.[else if locked]It is locked.[otherwise]It is closed.[end if];[if open]You can see inside it.[else if locked]There is a lock on it and seems impossible to #force_open#.[otherwise]You can't see inside it because the lid's in your way.[end if]
+openable_desc:[if open]It is [adjective of the verb {open}].[else if locked]It is [adjective of the verb {lock}].[otherwise]It is [adjective of the verb {close}].[end if]
 on_desc:On the (name), is [a list of things on the (obj)].;You can see [list of things on the (obj)] on the (name);this (name) has the following upon it, [list of things on the (obj)];you gaze in terror at the [list of things on the (obj)] that lie upon this very (name)!; "now why" you think, "am I looking at [list of things on the (obj)] on this (name)?"
 #Key Match Adjectives
 #These adjectives CANNOT be used elsewhere!
 #----------------
 letter:A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z
-clearancelevel:type #number#;type #letter#;#brand#;#brand#;#brand#;#shape#;#shape#;#shape#;#smell# scented;
-brand:#brandname# style;#brandname# limited edition;#brandname#
-brandname:Microsoft;American;Canadian;Henderson's;TextWorld
-shape:rectangular;cuboid;spherical;formless;non-euclidean
+clearancelevel:type #number#;type #letter#
 colour:red;blue;chartreuse;purple;violet;orange;yellow;green;brown;teal;cyan
-smell:vanilla;lavender;cake;fudge;fresh laundry;soap
 (k<->d)_match:#(k)_adj# | #clearancelevel# #(k)_noun# <-> #(d)_adj# | #clearancelevel# #(d)_noun#; #colour# | #(k)_noun# <-> #colour# | #(d)_noun#
 (k<->c)_match:#(k)_adj# | #clearancelevel# #(k)_noun# <-> #(c)_adj# | #clearancelevel# #(c)_noun#; #colour# | #(k)_noun# <-> #colour# | #(c)_noun#
