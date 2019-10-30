@@ -6,7 +6,7 @@ import networkx as nx
 from textworld.logic import Proposition
 
 
-def build_graph_from_facts(facts: Iterable[Proposition]) -> nx.DiGraph:
+def build_graph_from_facts(facts: Iterable[Proposition], prune:Optional[bool] = False) -> nx.DiGraph:
     """ Builds a graph from a collection of facts.
 
     Arguments:
@@ -18,6 +18,10 @@ def build_graph_from_facts(facts: Iterable[Proposition]) -> nx.DiGraph:
     G = nx.DiGraph()
     labels = {}
     for fact in facts:
+        # Prune out facts that we don't want in our KB representation
+        if prune and fact.name == 'free':
+            continue
+
         # Extract relation triplet from fact (subject, object, relation)
         triplet = (*fact.names, fact.name)
         triplet = triplet if len(triplet) >= 3 else triplet + ("is",)
@@ -41,7 +45,8 @@ def build_graph_from_facts(facts: Iterable[Proposition]) -> nx.DiGraph:
 def show_graph(facts: Iterable[Proposition],
                title: str = "Knowledge Graph",
                renderer:Optional[str] = None,
-               save:Optional[str] = None) -> "plotly.graph_objs._figure.Figure":
+               save:Optional[str] = None,
+               prune:Optional[bool] = False) -> "plotly.graph_objs._figure.Figure":
 
     r""" Visualizes the graph made from a collection of facts.
 
@@ -80,7 +85,7 @@ def show_graph(facts: Iterable[Proposition],
     except:
         raise ImportError('Visualization dependencies not installed. Try running `pip install textworld[vis]`')
 
-    G = build_graph_from_facts(facts)
+    G = build_graph_from_facts(facts, prune)
 
     plt.figure(figsize=(16, 9))
     pos = nx.drawing.nx_pydot.pydot_layout(G, prog="fdp")
