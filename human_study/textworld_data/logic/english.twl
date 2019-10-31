@@ -1,0 +1,51 @@
+
+type english {
+    inform7 {
+        type {
+            kind :: "object";
+        }
+
+        code :: """
+            To say adjective of (V - a verb):
+                if the verb open is V:
+                    say "open";
+                otherwise:
+                    say "[past participle of V]";
+
+            The dummy-adjective is a thing. The dummy-adjective is nowhere.
+
+            To say an adjective of (V - a verb):
+                now the printed name of dummy-adjective is "[adjective of V]";
+                say "[a dummy-adjective]";
+
+            To say An adjective of (V - a verb):
+                now the printed name of dummy-adjective is "[adjective of V]";
+                say "[A dummy-adjective]";
+
+            Displaying help message is an action applying to nothing.
+            Carry out displaying help message:
+                say "[fixed letter spacing]Available commands:[line break]";
+                say " inventory           [line break]";
+                say " chop ... with ...   [line break]";
+                say " put ... on ...      [line break]";
+                say " drop ...            [line break]";
+                say " cook ... with ...   [line break]";
+                say " insert ... into ... [line break]";
+                say " drink ...           [line break]";
+                say " go ...              [line break]";
+                say " close ...           [line break]";
+                say " eat ...             [line break]";
+                say " take ...            [line break]";
+                say " slice ... with ...  [line break]";
+                say " close ...           [line break]";
+                say " open ...            [line break]";
+                say " examine ...         [line break]";
+                say " dice ... with ...   [line break]";
+                say " look                [line break]";
+                say " prepare ...         [line break]";
+
+            Understand "help" as displaying help message.
+
+        """;
+    }
+}
