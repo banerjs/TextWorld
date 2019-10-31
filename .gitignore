@@ -25,3 +25,5 @@ tmp/*
 /dist
 /wheelhouse
 tw_games/
+docs/build/
+docs/src/
