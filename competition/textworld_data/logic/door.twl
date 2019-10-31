@@ -5,7 +5,7 @@ type d : t {
         closed(d);
         locked(d);
 
-        link(r, d, r');
+        link(r, d, r);
     }
 
     rules {
