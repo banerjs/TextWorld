@@ -15,6 +15,9 @@ case "${unameOut}" in
     *)          machine="UNKNOWN:${unameOut}"
 esac
 
+# Add to the path
+tatsu -h 2>&1 > /dev/null || export PATH=$HOME/.local/bin:$PATH
+
 # Generate parsers
 tatsu textworld/logic/logic.ebnf -o textworld/logic/parser.py -G textworld/logic/model.py
 tatsu textworld/textgen/textgen.ebnf -o textworld/textgen/parser.py -G textworld/textgen/model.py
