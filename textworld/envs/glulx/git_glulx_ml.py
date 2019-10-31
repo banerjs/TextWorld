@@ -21,7 +21,7 @@ import textworld
 from textworld.utils import str2bool
 from textworld.generator.game import Game, GameProgression
 from textworld.generator.inform7 import Inform7Game
-from textworld.logic import Action, State
+from textworld.logic import Action, State, Proposition
 from textworld.core import GameNotRunningError
 
 GLULX_PATH = resource_filename(Requirement.parse('textworld'), 'textworld/thirdparty/glulx/Git-Glulx')
@@ -286,6 +286,14 @@ class GlulxGameState(textworld.GameState):
         return self._inventory
 
     @property
+    def location(self):
+        if not hasattr(self, "_location"):
+            fact = [fact for fact in self.state.facts if fact.name == "at" and fact.arguments[0].type == "P"][0]
+            self._location = self.game_infos[fact.arguments[-1].name].name
+
+        return self._location
+
+    @property
     def command_feedback(self):
         """ Return the parser response related to the previous command.
 
@@ -399,6 +407,11 @@ class GlulxGameState(textworld.GameState):
         return self.has_won | self.has_lost | self.has_timeout
 
     @property
+    def facts(self) -> List[Proposition]:
+        """Current list of facts"""
+        return list(map(self._inform7.get_human_readable_fact, self.state.facts))
+
+    @property
     def game_infos(self) -> Mapping:
         """ Additional information about the game. """
         return self._game.infos
@@ -418,6 +431,19 @@ class GlulxGameState(textworld.GameState):
             return None
 
         return self._action
+
+    @property
+    def last_action(self) -> Action:
+        """ Last action that was detected """
+        if self.action is None:
+            return None
+
+        return self._inform7.get_human_readable_action(self.action)
+
+    @property
+    def last_command(self) -> Action:
+        """ Last command that was detected. """
+        return self._inform7.gen_commands_from_actions([self.action])[0]
 
     @property
     def admissible_commands(self):
@@ -448,6 +474,10 @@ class GlulxGameState(textworld.GameState):
     @property
     def extras(self):
         return self._game.extras
+
+    @property
+    def game(self):
+        return self._game.serialize()
 
 
 
