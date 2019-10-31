@@ -3,3 +3,4 @@
 
 
 from textworld.render.render import load_state, load_state_from_game_state, visualize
+from textworld.render.graph import show_graph
