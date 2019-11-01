@@ -51,6 +51,7 @@ type RECIPE {
         ingredient_1(f);
         ingredient_2(f);
         ingredient_3(f);
+        used(f);
         cooking_location(r, RECIPE);
         in(ingredient, RECIPE);
         out(meal, RECIPE);
@@ -58,9 +59,9 @@ type RECIPE {
     }
 
     rules {
-        make/recipe/1 :: $player_in_cooking_location(P, r) & in(f, I) & $ingredient_1(f) & $out(meal, RECIPE) -> in(meal, I) & edible(meal);
-        make/recipe/2 :: $player_in_cooking_location(P, r) & in(f, I) & $ingredient_1(f) & in(f', I) & $ingredient_2(f') & $out(meal, RECIPE) & $used(slot) & used(slot') -> in(meal, I) & free(slot') & edible(meal);
-        make/recipe/3 :: $player_in_cooking_location(P, r) & in(f, I) & $ingredient_1(f) & in(f', I) & $ingredient_2(f') & in(f'', I) & $ingredient_3(f'') & $out(meal, RECIPE) & $used(slot) & used(slot') & used(slot'') -> in(meal, I) & free(slot') & free(slot'') & edible(meal);
+        make/recipe/1 :: $player_in_cooking_location(P, r) & in(f, I) & $ingredient_1(f) & $out(meal, RECIPE) -> in(meal, I) & edible(meal) & used(f) & raw(meal);
+        make/recipe/2 :: $player_in_cooking_location(P, r) & in(f, I) & $ingredient_1(f) & in(f', I) & $ingredient_2(f') & $out(meal, RECIPE) & $used(slot) & used(slot') -> in(meal, I) & free(slot') & edible(meal) & used(f) & used(f') & raw(meal);
+        make/recipe/3 :: $player_in_cooking_location(P, r) & in(f, I) & $ingredient_1(f) & in(f', I) & $ingredient_2(f') & in(f'', I) & $ingredient_3(f'') & $out(meal, RECIPE) & $used(slot) & used(slot') & used(slot'') -> in(meal, I) & free(slot') & free(slot'') & edible(meal) & used(f) & used(f') & used(f'') & raw(meal);
     }
 
     inform7 {

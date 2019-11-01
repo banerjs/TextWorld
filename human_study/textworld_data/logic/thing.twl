@@ -36,33 +36,33 @@ type object {
             kind :: "object";
         }
 
-        code :: """
-            Use undo prevention.
-
-            Restarting immediately is an action out of world.
-            Carry out restarting immediately:
-                abide by the immediately restart the VM rule.
-
-            Understand the command "restart" as something new.
-            Understand the command "quit" as something new.
-            Understand "quit" as restarting immediately.
-            Understand "restart" as restarting immediately.
-
-            Rule for printing the player's obituary:
-                if story has ended finally:
-                    center "*** The End ***";
-                else:
-                    center "You shouldn't have done that! Now, the recipe is ruined.";
-                    center "*** You lost! ***";
-                say paragraph break;
-                say "You scored [score] out of a possible [maximum score], in [turn count] turn(s).";
-                if story has ended finally:
-                    say "[bold type]Click [bracket]Done[close bracket] at the top of the page to continue.";
-                    stop game abruptly;
-                else:
-                    say "[bold type]Press any key to restart.";
-                    wait for any key;
-                    abide by the carry out restarting immediately.
-        """;
+#         code :: """
+#             Use undo prevention.
+#
+#             Restarting immediately is an action out of world.
+#             Carry out restarting immediately:
+#                 abide by the immediately restart the VM rule.
+#
+#             Understand the command "restart" as something new.
+#             Understand the command "quit" as something new.
+#             Understand "quit" as restarting immediately.
+#             Understand "restart" as restarting immediately.
+#
+#             Rule for printing the player's obituary:
+#                 if story has ended finally:
+#                     center "*** The End ***";
+#                 else:
+#                     center "You shouldn't have done that! Now, the recipe is ruined.";
+#                     center "*** You lost! ***";
+#                 say paragraph break;
+#                 say "You scored [score] out of a possible [maximum score], in [turn count] turn(s).";
+#                 if story has ended finally:
+#                     say "[bold type]Click [bracket]Done[close bracket] at the top of the page to continue.";
+#                     stop game abruptly;
+#                 else:
+#                     say "[bold type]Press any key to restart.";
+#                     wait for any key;
+#                     abide by the carry out restarting immediately.
+#         """;
     }
 }
